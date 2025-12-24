@@ -416,6 +416,7 @@ node server.js
 | `TMDB_API_KEY` | ✅ 是 | TMDb API 密钥，用于获取影视信息 |
 | `CACHE_TYPE` | ❌ 否 | 缓存类型: `json`(默认), `sqlite`, `memory`, `none` |
 | `TMDB_PROXY_URL` | ❌ 否 | TMDB 反代地址，大陆用户需要配置 |
+| `CORS_PROXY_URL` | ❌ 否 | 视频/图片 CORS 代理地址，解决资源站播放失败问题 |
 | `PORT` | ❌ 否 | 服务端口，默认 3000 |
 | `ACCESS_PASSWORD` | ❌ 否 | 访问密码，保护站点不被公开访问 |
 | `REMOTE_DB_URL` | ❌ 否 | 远程 `db.json` 地址，用于统一配置管理 |
@@ -454,6 +455,8 @@ docker run -d -p 3000:3000 \
   -e TMDB_API_KEY="your_api_key_here" \
   -e ACCESS_PASSWORD="your_password" \
   -e TMDB_PROXY_URL="https://tmdb-proxy.your-name.workers.dev" \
+  -e CORS_PROXY_URL="https://cors-proxy.your-name.workers.dev" \
+  -e REMOTE_DB_URL="https://example.com/db.json" \
   -v $(pwd)/db.json:/app/db.json \
   -v $(pwd)/cache.db:/app/cache.db \
   -v $(pwd)/cache/images:/app/public/cache/images \
@@ -462,7 +465,7 @@ docker run -d -p 3000:3000 \
   ghcr.io/ednovas/dongguatv:latest
 ```
 
-> **� 常见错误警告**：如果启动失败且日志报错 `EISDIR: illegal operation on a directory`，说明您没有先创建 `db.json` 文件，Docker 自动创建了同名文件夹。请删除该文件夹 (`rm -rf db.json`) 并重新执行上述 `touch` 命令创建文件。
+> **⚠️ 常见错误警告**：如果启动失败且日志报错 `EISDIR: illegal operation on a directory`，说明您没有先创建 `db.json` 文件，Docker 自动创建了同名文件夹。请删除该文件夹 (`rm -rf db.json`) 并重新执行上述 `touch` 命令创建文件。
 >
 > **注意**：如果不挂载 `-v` 卷，您的站点配置(db.json)和缓存(cache.db)将在容器重启后丢失。请确保当前目录下有 `db.json` 文件（如果没有，第一次运行后可以从容器内复制出来）。
 
@@ -478,6 +481,8 @@ docker run -d -p 3000:3000 \
     docker run -d -p 3000:3000 \
       -e TMDB_API_KEY="your_api_key_here" \
       -e TMDB_PROXY_URL="https://tmdb-proxy.your-name.workers.dev" \
+      -e CORS_PROXY_URL="https://cors-proxy.your-name.workers.dev" \
+      -e REMOTE_DB_URL="https://example.com/db.json" \
       --name donggua-tv \
       --restart unless-stopped \
       donggua-tv
@@ -498,7 +503,9 @@ docker run -d -p 3000:3000 \
         environment:
           - TMDB_API_KEY=your_api_key_here
           - TMDB_PROXY_URL=https://tmdb-proxy.your-name.workers.dev
+          - CORS_PROXY_URL=https://cors-proxy.your-name.workers.dev
           - ACCESS_PASSWORD=your_secure_password
+          - REMOTE_DB_URL=https://example.com/db.json
         volumes:
           - ./db.json:/app/db.json
           - ./cache.db:/app/cache.db
