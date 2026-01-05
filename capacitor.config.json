@@ -3,7 +3,7 @@
     "appName": "E视界",
     "webDir": "public",
     "server": {
-        "url": "https://www.740910.xyz",
+        "url": "http://www.740910.xyz",
         "cleartext": true
     },
     "plugins": {
@@ -15,4 +15,5 @@
     }
 
 }
+
 
